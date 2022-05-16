@@ -31,6 +31,8 @@ func (a *App) Initialize(user, password, dbname string) {
 	a.Router = mux.NewRouter()
 
 	a.initializeRoutes()
+
+	fmt.Println("The server is running...")
 }
 
 func (a *App) Run(addr string) {
