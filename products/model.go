@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type product struct {
@@ -41,12 +42,13 @@ func (p *product) createProduct(db *sql.DB) error {
 	return nil
 }
 
-func getProducts(db *sql.DB, start, count int) ([]product, error) {
+func getProducts(db *sql.DB, start, count int, orderColumn, orderDirection string) ([]product, error) {
 	rows, err := db.Query(
-		"SELECT id, name,  price FROM products LIMIT $1 OFFSET $2",
-		count, start)
+		"SELECT id, name,  price FROM products ORDER BY $3 "+orderDirection+" LIMIT $1 OFFSET $2",
+		count, start, orderColumn)
 
 	if err != nil {
+		fmt.Println(orderColumn, orderDirection)
 		return nil, err
 	}
 

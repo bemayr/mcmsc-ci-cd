@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 	"testing"
 
 	"bytes"
@@ -49,6 +50,19 @@ func TestEmptyTable(t *testing.T) {
 	clearTable()
 
 	req, _ := http.NewRequest("GET", "/products", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	if body := response.Body.String(); body != "[]" {
+		t.Errorf("Expected an empty array. Got %s", body)
+	}
+}
+
+func TestEmptyTableWithQuery(t *testing.T) {
+	clearTable()
+
+	req, _ := http.NewRequest("GET", "/products?orderColumn=name&orderDirection=desc", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -123,6 +137,38 @@ func TestGetProduct(t *testing.T) {
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
+}
+
+func TestGetProductName(t *testing.T) {
+	clearTable()
+	addProducts(1)
+
+	req, _ := http.NewRequest("GET", "/product/1/name", nil)
+	response := executeRequest(req)
+
+	var actual string
+	const expected = "Product"
+	json.Unmarshal(response.Body.Bytes(), &actual)
+
+	if !strings.HasPrefix(actual, expected) {
+		t.Errorf("Expected name to start with %s. Got %s", expected, actual)
+	}
+}
+
+func TestGetProductPrice(t *testing.T) {
+	clearTable()
+	addProducts(1)
+
+	req, _ := http.NewRequest("GET", "/product/1/price", nil)
+	response := executeRequest(req)
+
+	var actual float64
+	const expected = 10.0
+	json.Unmarshal(response.Body.Bytes(), &actual)
+
+	if expected != actual {
+		t.Errorf("Expected %f. Got %f", expected, actual)
+	}
 }
 
 // main_test.go
