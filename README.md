@@ -11,6 +11,9 @@ export APP_DB_NAME=postgres
 # Start the Database
 docker-compose up -d
 
-# Test the Go Application
+# Test the Go Application (inside products/)
 go test -v
+
+# Run the Go Application (inside products/)
+go build -o build/app && ./build/app
 ```
