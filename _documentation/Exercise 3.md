@@ -1,5 +1,9 @@
 # Exercise 3
 
+## References
+- Repository: https://github.com/bemayr/mcmsc-ci-cd/
+- This documentation file: https://github.com/bemayr/mcmsc-ci-cd/blob/main/_documentation/Exercise%203.md
+
 ## GitHub Actions
 
 The following file produces the output beneath:
