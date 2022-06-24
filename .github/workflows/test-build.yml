@@ -1,0 +1,32 @@
+name: Test and Build Application
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    env:
+      APP_DB_USERNAME: postgres
+      APP_DB_PASSWORD: postgres
+      APP_DB_NAME: postgres
+    steps:
+    - name: Setup Go environment 🌍
+      uses: actions/setup-go@v3.2.0
+
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
+
+    - name: Start Docker Containers 🐋
+      run: docker-compose up -d
+
+    - name: Test 🧪
+      run: go test -v
+      working-directory: products
+
+    - name: Build 🛠️
+      run: go build -o build/app
+      working-directory: products
